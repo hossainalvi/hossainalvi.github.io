@@ -223,6 +223,52 @@ h1, h2, h3 { font-family: "Space Grotesk", sans-serif; line-height: 1.2; }
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), 0 0 34px rgba(var(--accent-rgb), 0.55);
 }
 
+/* STEP 9 (redesign) - Liquid glass refinement: thinner, clearer glass with a gradient rim and soft glow */
+:root[data-theme="dark"] {
+  --glass-fill: rgba(255, 255, 255, 0.032);
+  --glass-sheen: rgba(255, 255, 255, 0.075);
+  --glass-blur: 14px;
+  --glass-sat: 185%;
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass-highlight: rgba(255, 255, 255, 0.30);
+  --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.26), 0 0 44px -18px rgba(77, 163, 255, 0.35);
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root[data-theme="dark"] .glass-card,
+  :root[data-theme="dark"] .glass-btn:not(.glass-btn--primary):not(.filter.active) {
+    background:
+      linear-gradient(135deg, var(--glass-sheen), transparent 38%),
+      radial-gradient(120% 70% at 50% 120%, rgba(124, 196, 255, 0.07), transparent 60%),
+      var(--glass-fill);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(1.06);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(1.06);
+  }
+}
+:root[data-theme="dark"] .glass-card,
+:root[data-theme="dark"] .glass-btn {
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-highlight), inset 0 -12px 22px -18px rgba(124, 196, 255, 0.30);
+}
+/* Gradient rim: bright at the top-left, fading through clear, a hint of blue at the bottom-right */
+:root[data-theme="dark"] .glass-card:not(.tl-item)::after,
+:root[data-theme="dark"] .glass-btn::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.06) 35%, rgba(255, 255, 255, 0.03) 60%, rgba(124, 196, 255, 0.32));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+:root[data-theme="dark"] .tl-item { border-color: rgba(255, 255, 255, 0.10) rgba(255, 255, 255, 0.06) rgba(124, 196, 255, 0.16) rgba(255, 255, 255, 0.14); } /* its ::after is the timeline dot */
+:root[data-theme="dark"] .glass-btn--primary,
+:root[data-theme="dark"] .filter.active {
+  box-shadow: 0 8px 26px rgba(var(--accent-rgb), 0.32), 0 0 30px -6px rgba(var(--accent-rgb), 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 -10px 18px -14px rgba(255, 255, 255, 0.35);
+}
+
 /* Small glass tags: lighter, no blur, never shimmer */
 .glass-tag {
   --hs: 1.08;
