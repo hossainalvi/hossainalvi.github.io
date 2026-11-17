@@ -780,6 +780,41 @@ section { padding: 72px 0; }
 .project.is-entering { opacity: 0; scale: 0.92; }
 .project.hide { display: none; }
 
+/* Window-style card top (Step 6 redesign) */
+.win { position: relative; margin: 12px 12px 0; border-radius: 14px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(7, 18, 38, 0.55); }
+.win-bar { display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 12px; background: rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+.win-dots { display: inline-flex; gap: 6px; flex-shrink: 0; }
+.win-dots i { width: 10px; height: 10px; border-radius: 50%; background: #ff5f57; }
+.win-dots i:nth-child(2) { background: #febc2e; }
+.win-dots i:nth-child(3) { background: #28c840; }
+.win-file { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.76rem; color: #a3b3cb; }
+.win-media { position: relative; display: grid; place-items: center; height: 170px; background: linear-gradient(160deg, rgba(30, 58, 138, 0.45), rgba(7, 18, 38, 0.30)); }
+.win-media .cover-text { position: relative; font-family: "Space Grotesk", sans-serif; font-size: 2.6rem; color: var(--accent); opacity: 0.9; }
+/* Picture slot: add <img class="win-img" src="images/projects/..." alt=""> inside .win-media */
+.win-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.win-media:has(.win-img) .cover-text { display: none; }
+.proj-label, .project-body .proj-label { margin: 0 0 6px; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.74rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.project-body p.proj-short, .project-body .proj-full p { margin-bottom: 10px; }
+.more-btn { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; margin: 0 0 16px; padding: 4px 0; background: none; border: 0; color: var(--accent-2); font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+.more-btn svg { width: 14px; height: 14px; transition: transform 0.25s ease; }
+.more-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
+.more-btn:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; border-radius: 4px; }
+@media (hover: hover) { .more-btn:hover { color: #ffffff; } }
+
+/* Featured slot: spans the whole first row */
+.featured { --hs: 1.012; grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: center; gap: 12px; padding-bottom: 12px; }
+.featured .win { margin-bottom: 0; }
+.featured .win-media { height: 300px; }
+.featured-body { padding: 22px 28px; }
+.featured-body h3 { font-size: 1.4rem; margin-bottom: 8px; }
+.featured.hide { display: none; }
+.proj-empty { grid-column: 1 / -1; margin: 0; padding: 40px 24px; text-align: center; color: var(--muted); border: 1px dashed rgba(255, 255, 255, 0.14); border-radius: var(--radius); }
+@media (max-width: 760px) {
+  .featured { grid-template-columns: minmax(0, 1fr); }
+  .featured .win-media { height: 190px; }
+  .featured-body { padding: 18px 22px 10px; }
+}
+
 /* STEP 11 - Timeline (Education + Experience share this) */
 .timeline { position: relative; padding-left: 30px; }
 .timeline::before { content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; border-radius: 2px; background: var(--line); }
@@ -1216,7 +1251,7 @@ section { padding: 72px 0; }
     <div class="section-head reveal">
       <div class="num">Projects</div>
       <h2>Projects</h2>
-      <p>Work from my MBA and personal practice.</p>
+      <p>Analytics projects from my MBA at IMC and my internship at TDAI.</p>
     </div>
 
     <div class="filters reveal" role="group" aria-label="Filter projects">
@@ -1224,18 +1259,38 @@ section { padding: 72px 0; }
       <button class="filter glass-btn glass-btn--sm" type="button" data-filter="ml" aria-pressed="false">Machine Learning</button>
       <button class="filter glass-btn glass-btn--sm" type="button" data-filter="excel" aria-pressed="false">Excel</button>
       <button class="filter glass-btn glass-btn--sm" type="button" data-filter="tableau" aria-pressed="false">Tableau</button>
+      <button class="filter glass-btn glass-btn--sm" type="button" data-filter="powerbi" aria-pressed="false">Power BI</button>
+      <button class="filter glass-btn glass-btn--sm" type="button" data-filter="claude" aria-pressed="false">Claude</button>
     </div>
 
     <div class="projects-grid">
-      <!-- To add a cover picture to a project, put this as the first thing inside its
-           project-cover:  <img class="cover-img" src="images/projects/your-file.png" alt="" loading="lazy">
-           Leave it out (or if the file is missing) and the panel stays plain glass. -->
+      <!-- FEATURED SLOT: empty for now. To use it, put a project's details here
+           (file name in .win-file, a picture in .win-media, label, title, text, tags, link). -->
+      <article class="featured glass-card reveal" aria-label="Featured project">
+        <div class="win">
+          <div class="win-bar"><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="win-file"></span></div>
+          <div class="win-media"></div>
+        </div>
+        <div class="featured-body">
+          <p class="proj-label">Featured</p>
+          <h3>Coming soon</h3>
+        </div>
+      </article>
+
+      <!-- Each card: add a picture with <img class="win-img" src="images/projects/your-file.png" alt="">
+           inside its .win-media. Set data-cat to ml, excel, tableau, powerbi or claude for the filters. -->
       <!-- PROJECT 1 -->
       <article class="project glass-card reveal" data-cat="ml">
-        <div class="project-cover"><img class="cover-img" src="images/projects/youtube-clustering.png" alt="" loading="lazy"><span class="type glass-tag">KNIME &middot; Clustering</span><span class="cover-text">K=4</span></div>
+        <div class="win">
+          <div class="win-bar"><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="win-file">KNIME Hub</span></div>
+          <div class="win-media"><span class="cover-text" aria-hidden="true">K=4</span></div>
+        </div>
         <div class="project-body">
+          <p class="proj-label">KNIME &middot; Clustering</p>
           <h3>YouTube Trending Videos Clustering</h3>
-          <p>Grouped 16,200 trending YouTube videos from Brazil into four clusters using K-means on views, likes, dislikes and comments. Built the workflow in KNIME with min-max normalisation and scatter plots coloured by cluster. Group project.</p>
+          <p class="proj-short">K-means clustering of 16,200 trending YouTube videos from Brazil, built in KNIME.</p>
+          <div class="proj-full" id="proj1-full" hidden><p>Grouped 16,200 trending YouTube videos from Brazil into four clusters using K-means on views, likes, dislikes and comments. Built the workflow in KNIME with min-max normalisation and scatter plots coloured by cluster. Group project.</p></div>
+          <button class="more-btn" type="button" aria-expanded="false" aria-controls="proj1-full">Read more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="chips"><span class="glass-tag">KNIME</span><span class="glass-tag">K-means</span><span class="glass-tag">Normalisation</span></div>
           <div class="project-links"><a class="text-link" href="https://hub.knime.com/s/0ugQFmacHbmKiSat" target="_blank" rel="noopener">View on KNIME Hub <span class="arrow" aria-hidden="true">&rarr;</span></a></div>
         </div>
@@ -1243,10 +1298,16 @@ section { padding: 72px 0; }
 
       <!-- PROJECT 2 -->
       <article class="project glass-card reveal" data-cat="excel">
-        <div class="project-cover"><img class="cover-img" src="images/projects/cochlear-valuation.png" alt="" loading="lazy"><span class="type glass-tag">Excel &middot; Finance</span><span class="cover-text">COH</span></div>
+        <div class="win">
+          <div class="win-bar"><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="win-file">COH_Valuation_final.xlsx</span></div>
+          <div class="win-media"><span class="cover-text" aria-hidden="true">COH</span></div>
+        </div>
         <div class="project-body">
+          <p class="proj-label">Excel &middot; Finance</p>
           <h3>Cochlear Limited Stock Valuation</h3>
-          <p>Valued Cochlear (ASX: COH) with a free-cash-flow based dividend discount model in Excel. The model gave $1,104.63 per share against a market price of $121.75 (30 June 2026), rating the stock undervalued. With r (9.71%) and g (9.41%) this close, the result is very sensitive to small changes. Group project: I built the growth and valuation calculations.</p>
+          <p class="proj-short">A free-cash-flow based dividend discount model valuing Cochlear (ASX: COH) in Excel.</p>
+          <div class="proj-full" id="proj2-full" hidden><p>Valued Cochlear (ASX: COH) with a free-cash-flow based dividend discount model in Excel. The model gave $1,104.63 per share against a market price of $121.75 (30 June 2026), rating the stock undervalued. With r (9.71%) and g (9.41%) this close, the result is very sensitive to small changes. Group project: I built the growth and valuation calculations.</p></div>
+          <button class="more-btn" type="button" aria-expanded="false" aria-controls="proj2-full">Read more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="chips"><span class="glass-tag">Excel</span><span class="glass-tag">DDM</span><span class="glass-tag">Free cash flow</span></div>
           <div class="project-links"><a class="text-link" href="assets/COH_Valuation_final.xlsx" download>Download Excel model <span class="arrow" aria-hidden="true">&rarr;</span></a></div>
         </div>
@@ -1254,14 +1315,22 @@ section { padding: 72px 0; }
 
       <!-- PROJECT 3 -->
       <article class="project glass-card reveal" data-cat="tableau">
-        <div class="project-cover"><img class="cover-img" src="images/projects/netflix-dashboard.png" alt="" loading="lazy"><span class="type glass-tag">Tableau &middot; Dashboard</span><span class="cover-text">2016&ndash;25</span></div>
+        <div class="win">
+          <div class="win-bar"><span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="win-file">Tableau Public</span></div>
+          <div class="win-media"><span class="cover-text" aria-hidden="true">2016&ndash;25</span></div>
+        </div>
         <div class="project-body">
+          <p class="proj-label">Tableau &middot; Dashboard</p>
           <h3>Netflix Content Analysis</h3>
-          <p>Analysed Netflix titles from 2016 to 2025 and built Tableau dashboards to tell the story of how the catalogue changed. Group project for Data Storytelling and Visualisation.</p>
+          <p class="proj-short">Tableau dashboards showing how the Netflix catalogue changed from 2016 to 2025.</p>
+          <div class="proj-full" id="proj3-full" hidden><p>Analysed Netflix titles from 2016 to 2025 and built Tableau dashboards to tell the story of how the catalogue changed. Group project for Data Storytelling and Visualisation.</p></div>
+          <button class="more-btn" type="button" aria-expanded="false" aria-controls="proj3-full">Read more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="chips"><span class="glass-tag">Tableau</span><span class="glass-tag">Data storytelling</span></div>
           <div class="project-links"><a class="text-link" href="https://public.tableau.com/views/NetflixDataAnalysis_17863509553160/NetflixContentDashboard?:language=en-US&amp;:display_count=n&amp;:origin=viz_share_link" target="_blank" rel="noopener">View on Tableau Public <span class="arrow" aria-hidden="true">&rarr;</span></a></div>
         </div>
       </article>
+
+      <p class="proj-empty" hidden>No projects in this category yet.</p>
     </div>
   </div>
 </section>
@@ -1830,7 +1899,22 @@ document.querySelectorAll('.cover-img').forEach(img => {
 /* ---------- Step 10: project filters with fade + scale ---------- */
 const filterBtns = document.querySelectorAll('.filter');
 const projectCards = document.querySelectorAll('.project');
+const featuredCard = document.querySelector('.featured');
+const emptyMsg = document.querySelector('.proj-empty');
 let filterRun = 0;
+
+/* Read more / Show less */
+document.querySelectorAll('.more-btn').forEach(btn => {
+  const full = document.getElementById(btn.getAttribute('aria-controls'));
+  const short = btn.closest('.project-body').querySelector('.proj-short');
+  btn.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') !== 'true';
+    btn.setAttribute('aria-expanded', String(open));
+    full.hidden = !open;
+    short.hidden = open;
+    btn.firstChild.textContent = open ? 'Show less ' : 'Read more ';
+  });
+});
 filterBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     filterBtns.forEach(b => {
@@ -1840,6 +1924,9 @@ filterBtns.forEach(btn => {
     });
     const f = btn.dataset.filter;
     const run = ++filterRun;
+    featuredCard.classList.toggle('hide', f !== 'all');          // featured slot only under "All"
+    const matches = [...projectCards].filter(p => f === 'all' || p.dataset.cat === f).length;
+    emptyMsg.hidden = matches > 0;
     const leaving = [], entering = [];
     projectCards.forEach(p => {
       const show = f === 'all' || p.dataset.cat === f;
