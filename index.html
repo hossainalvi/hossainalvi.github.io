@@ -270,9 +270,8 @@ h1, h2, h3 { font-family: "Space Grotesk", sans-serif; line-height: 1.2; }
 .glass-btn:active { transform: scale(var(--press)); transition-duration: 120ms; }
 .social-icon:active { transform: scale(calc(var(--press) - 0.04)); transition-duration: 120ms; }
 
-/* Section labels (Step 2: numbers removed) */
+/* Section headings (see STEP 8 redesign styles) */
 .section-head { margin-bottom: 44px; }
-.num { color: var(--accent); font-weight: 600; font-size: 0.82rem; letter-spacing: 0.14em; text-transform: uppercase; }
 .section-head h2 { font-size: clamp(1.8rem, 3.5vw, 2.4rem); margin: 6px 0 8px; }
 .section-head p { color: var(--muted); }
 
@@ -702,6 +701,42 @@ section { padding: 72px 0; }
 }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; }
 
+/* STEP 8 (redesign) - Section headings: graph grid, query line, sparkline */
+.section-head, .contact-box { position: relative; }
+.section-head > *, .contact-box > * { position: relative; }
+.grid-bg { position: absolute !important; left: -60px; top: -60px; width: min(760px, calc(100% + 60px)); height: 300px; pointer-events: none; z-index: 0;
+  background-image: linear-gradient(rgba(124, 196, 255, 0.09) 1px, transparent 1px), linear-gradient(90deg, rgba(124, 196, 255, 0.09) 1px, transparent 1px);
+  background-size: 28px 28px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 30% 45%, #000 20%, transparent 75%); mask-image: radial-gradient(ellipse 60% 60% at 30% 45%, #000 20%, transparent 75%); }
+.contact-box > .grid-bg { left: 50%; top: -40px; width: min(760px, 100%); transform: translateX(-50%);
+  -webkit-mask-image: radial-gradient(ellipse 55% 60% at 50% 45%, #000 20%, transparent 75%); mask-image: radial-gradient(ellipse 55% 60% at 50% 45%, #000 20%, transparent 75%); }
+.query { display: inline-flex; align-items: center; gap: 10px; max-width: 100%; margin: 0 0 14px; padding: 8px 14px; border-radius: 10px;
+  font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 14px; color: #a3b3cb !important; white-space: nowrap;
+  background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.10); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08); }
+.q-prompt { color: #4da3ff; }
+.q-kw { color: #7cc4ff; }
+.q-tb { color: #5eead4; }
+.q-cursor { display: inline-block; width: 8px; height: 16px; background: #7cc4ff; border-radius: 1px; animation: q-blink 1.1s steps(1) infinite; }
+@keyframes q-blink { 50% { opacity: 0; } }
+.section-head h2 { margin: 2px 0 0; }
+.spark { display: block; width: min(340px, 80%); height: 44px; margin: 14px 0 12px; overflow: visible; }
+.spark--center { margin: 6px auto 14px; }
+.spark path { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 420; stroke-dashoffset: 420; }
+.spark circle { opacity: 0; }
+.spark .pt { fill: #7cc4ff; }
+.spark .halo { fill: rgba(124, 196, 255, 0.25); }
+.visible .spark path, .spark.visible path { animation: spark-draw 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards; }
+.visible .spark circle, .spark.visible circle { animation: spark-pop 0.4s ease 2.4s forwards; }
+.no-js .spark path { stroke-dashoffset: 0; } .no-js .spark circle { opacity: 1; }
+@keyframes spark-draw { to { stroke-dashoffset: 0; } }
+@keyframes spark-pop { to { opacity: 1; } }
+@media (max-width: 640px) { .query { font-size: 12.5px; padding: 7px 12px; } .grid-bg { left: -20px; width: calc(100% + 40px); } }
+@media (prefers-reduced-motion: reduce) {
+  .q-cursor { animation: none; }
+  .spark path { animation: none !important; stroke-dashoffset: 0; }
+  .spark circle { animation: none !important; opacity: 1; }
+}
+
 /* STEP 7 (redesign) - Skills: Data Ticker rows + Glass Lanes tabs */
 .sk-chip { display: grid; place-items: center; flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%; background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(255, 255, 255, 0.75); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28), inset 0 1px 0 #ffffff; }
 .sk-chip img { width: 58%; height: 58%; object-fit: contain; display: block; }
@@ -937,14 +972,6 @@ section { padding: 72px 0; }
    ===================================================================== */
 .contact { text-align: center; padding-bottom: 80px; }
 .contact-box { display: flex; flex-direction: column; align-items: center; }
-.num--line::after {
-  content: "";
-  display: block;
-  width: 48px;
-  height: 1px;
-  margin: 12px auto 0;
-  background: linear-gradient(90deg, transparent, rgba(var(--accent-rgb), 0.9), transparent);
-}
 .contact-badge {
   display: inline-flex;
   align-items: center;
@@ -1260,8 +1287,10 @@ section { padding: 72px 0; }
 <section id="skills">
   <div class="container">
     <div class="section-head reveal">
-      <div class="num">Skills</div>
+      <span class="grid-bg" aria-hidden="true"></span>
+      <p class="query" aria-hidden="true"><span class="q-prompt">&gt;</span><span><span class="q-kw">SELECT</span> * <span class="q-kw">FROM</span> <span class="q-tb">skills</span>;</span><span class="q-cursor"></span></p>
       <h2>Skills &amp; Tools</h2>
+      <svg class="spark" viewBox="0 0 340 44" aria-hidden="true" focusable="false"><defs><linearGradient id="spark-skills" x1="0" x2="1"><stop offset="0" stop-color="#1D4ED8"/><stop offset=".6" stop-color="#4DA3FF"/><stop offset="1" stop-color="#5EEAD4"/></linearGradient></defs><path d="M2 38 L40 30 L78 33 L116 22 L154 26 L192 15 L230 18 L268 9 L306 12 L338 4" stroke="url(#spark-skills)"/><circle class="halo" cx="338" cy="4" r="8"/><circle class="pt" cx="338" cy="4" r="4"/></svg>
       <p>What I use to get from raw data to an answer.</p>
     </div>
   </div>
@@ -1305,8 +1334,10 @@ section { padding: 72px 0; }
 <section id="projects">
   <div class="container">
     <div class="section-head reveal">
-      <div class="num">Projects</div>
+      <span class="grid-bg" aria-hidden="true"></span>
+      <p class="query" aria-hidden="true"><span class="q-prompt">&gt;</span><span><span class="q-kw">SELECT</span> * <span class="q-kw">FROM</span> <span class="q-tb">projects</span>;</span><span class="q-cursor"></span></p>
       <h2>Projects</h2>
+      <svg class="spark" viewBox="0 0 340 44" aria-hidden="true" focusable="false"><defs><linearGradient id="spark-projects" x1="0" x2="1"><stop offset="0" stop-color="#1D4ED8"/><stop offset=".6" stop-color="#4DA3FF"/><stop offset="1" stop-color="#5EEAD4"/></linearGradient></defs><path d="M2 34 L40 36 L78 24 L116 28 L154 17 L192 21 L230 11 L268 14 L306 6 L338 8" stroke="url(#spark-projects)"/><circle class="halo" cx="338" cy="8" r="8"/><circle class="pt" cx="338" cy="8" r="4"/></svg>
       <p>Analytics projects from my MBA at IMC and my internship at TDAI.</p>
     </div>
 
@@ -1397,8 +1428,11 @@ section { padding: 72px 0; }
 <section id="education">
   <div class="container">
     <div class="section-head reveal">
-      <div class="num">Education</div>
+      <span class="grid-bg" aria-hidden="true"></span>
+      <p class="query" aria-hidden="true"><span class="q-prompt">&gt;</span><span><span class="q-kw">SELECT</span> * <span class="q-kw">FROM</span> <span class="q-tb">education</span>;</span><span class="q-cursor"></span></p>
       <h2>Education</h2>
+      <svg class="spark" viewBox="0 0 340 44" aria-hidden="true" focusable="false"><defs><linearGradient id="spark-education" x1="0" x2="1"><stop offset="0" stop-color="#1D4ED8"/><stop offset=".6" stop-color="#4DA3FF"/><stop offset="1" stop-color="#5EEAD4"/></linearGradient></defs><path d="M2 40 L40 37 L78 35 L116 30 L154 31 L192 24 L230 20 L268 17 L306 10 L338 6" stroke="url(#spark-education)"/><circle class="halo" cx="338" cy="6" r="8"/><circle class="pt" cx="338" cy="6" r="4"/></svg>
+      <p>The study behind my analysis, from IT foundations to business analytics.</p>
     </div>
     <div class="timeline">
       <div class="tl-item glass-card reveal">
@@ -1423,8 +1457,11 @@ section { padding: 72px 0; }
 <section id="experience">
   <div class="container">
     <div class="section-head reveal">
-      <div class="num">Experience</div>
+      <span class="grid-bg" aria-hidden="true"></span>
+      <p class="query" aria-hidden="true"><span class="q-prompt">&gt;</span><span><span class="q-kw">SELECT</span> * <span class="q-kw">FROM</span> <span class="q-tb">experience</span>;</span><span class="q-cursor"></span></p>
       <h2>Experience</h2>
+      <svg class="spark" viewBox="0 0 340 44" aria-hidden="true" focusable="false"><defs><linearGradient id="spark-experience" x1="0" x2="1"><stop offset="0" stop-color="#1D4ED8"/><stop offset=".6" stop-color="#4DA3FF"/><stop offset="1" stop-color="#5EEAD4"/></linearGradient></defs><path d="M2 30 L40 34 L78 26 L116 31 L154 20 L192 24 L230 14 L268 18 L306 9 L338 5" stroke="url(#spark-experience)"/><circle class="halo" cx="338" cy="5" r="8"/><circle class="pt" cx="338" cy="5" r="4"/></svg>
+      <p>Hands-on work, from client websites to data analysis.</p>
     </div>
     <div class="timeline">
       <div class="tl-item glass-card reveal">
@@ -1461,8 +1498,10 @@ section { padding: 72px 0; }
 <section id="certifications" hidden>
   <div class="container">
     <div class="section-head reveal">
-      <div class="num">Certifications</div>
+      <span class="grid-bg" aria-hidden="true"></span>
+      <p class="query" aria-hidden="true"><span class="q-prompt">&gt;</span><span><span class="q-kw">SELECT</span> * <span class="q-kw">FROM</span> <span class="q-tb">certifications</span>;</span><span class="q-cursor"></span></p>
       <h2>Certifications</h2>
+      <svg class="spark" viewBox="0 0 340 44" aria-hidden="true" focusable="false"><defs><linearGradient id="spark-certifications" x1="0" x2="1"><stop offset="0" stop-color="#1D4ED8"/><stop offset=".6" stop-color="#4DA3FF"/><stop offset="1" stop-color="#5EEAD4"/></linearGradient></defs><path d="M2 36 L40 32 L78 34 L116 26 L154 22 L192 25 L230 16 L268 12 L306 13 L338 6" stroke="url(#spark-certifications)"/><circle class="halo" cx="338" cy="6" r="8"/><circle class="pt" cx="338" cy="6" r="4"/></svg>
     </div>
     <div class="cert-grid">
       <!-- EDIT: copy this block once for each certificate you have -->
@@ -1486,9 +1525,11 @@ section { padding: 72px 0; }
 <!-- ================= CONTACT (Step 13) ================= -->
 <section id="contact" class="contact">
   <div class="container contact-box">
-    <div class="num num--line reveal">Contact</div>
+    <span class="grid-bg" aria-hidden="true"></span>
+    <div class="reveal"><p class="query" aria-hidden="true"><span class="q-prompt">&gt;</span><span><span class="q-kw">SELECT</span> * <span class="q-kw">FROM</span> <span class="q-tb">contact</span>;</span><span class="q-cursor"></span></p></div>
     <div class="contact-badge reveal"><span class="dot" aria-hidden="true"></span>Open to Data &amp; Business Analyst Roles</div>
     <h2 class="reveal">Let's make your numbers <span>talk.</span></h2>
+    <svg class="spark spark--center reveal" viewBox="0 0 340 44" aria-hidden="true" focusable="false"><defs><linearGradient id="spark-contact" x1="0" x2="1"><stop offset="0" stop-color="#1D4ED8"/><stop offset=".6" stop-color="#4DA3FF"/><stop offset="1" stop-color="#5EEAD4"/></linearGradient></defs><path d="M2 32 L40 28 L78 33 L116 24 L154 27 L192 18 L230 21 L268 12 L306 15 L338 7" stroke="url(#spark-contact)"/><circle class="halo" cx="338" cy="7" r="8"/><circle class="pt" cx="338" cy="7" r="4"/></svg>
     <p class="contact-sub reveal">Open to on-site and remote data analyst roles and internships.</p>
 
     <div class="contact-actions reveal">
