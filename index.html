@@ -803,6 +803,24 @@ section { padding: 72px 0; }
 .date { color: var(--accent); font-size: 0.88rem; font-weight: 600; white-space: nowrap; }
 .org { color: var(--accent-2); font-size: 0.95rem; margin-bottom: 12px; }
 .tl-item p.desc { color: var(--muted); font-size: 0.93rem; }
+/* Organisation logo slot: identical size in every card. Shown only once its image file loads. */
+.tl-item { --logo: 56px; --logo-gap: 18px; }
+.org-logos { position: absolute; left: 26px; top: 24px; display: none; flex-direction: column; gap: 8px; z-index: 1; }
+.tl-item.has-logo .org-logos { display: flex; }
+.tl-item.has-logo { padding-left: calc(26px + var(--logo) + var(--logo-gap)); }
+.org-logo {
+  display: none;
+  width: var(--logo);
+  height: var(--logo);
+  border-radius: 16px;              /* rounded slot */
+  padding: 0;                       /* logo fills the slot edge to edge, like an app icon */
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28), inset 0 1px 0 #ffffff;
+  overflow: hidden;
+}
+.org-logo.is-loaded { display: block; }
+.org-logo img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; border-radius: inherit; }  /* square logos fill the rounded slot */
 .tl-item ul { list-style: none; color: var(--muted); font-size: 0.93rem; }
 .tl-item li { position: relative; padding-left: 18px; margin-bottom: 6px; }
 .tl-item li::before {
@@ -1031,6 +1049,9 @@ section { padding: 72px 0; }
   .timeline { padding-left: 26px; }
   .tl-item { display: flex; flex-direction: column; padding: 20px; }
   .tl-item::after { left: -26px; top: 23px; }
+  .tl-item { --logo: 48px; --logo-gap: 14px; }
+  .org-logos { left: 20px; top: 20px; }
+  .tl-item.has-logo { padding-left: calc(20px + var(--logo) + var(--logo-gap)); }
   .tl-top { display: contents; }
   .tl-top h3 { order: 1; margin-bottom: 4px; }
   .tl-item .org { order: 2; margin-bottom: 4px; }
@@ -1254,12 +1275,15 @@ section { padding: 72px 0; }
     <div class="timeline">
       <div class="tl-item glass-card reveal">
         <div class="tl-top"><h3>Master of Business Administration (Business Analytics)</h3><span class="date">Feb 2026 &ndash; Nov 2027</span></div>
+        <div class="org-logos" aria-hidden="true"><span class="org-logo"><img src="images/logos/imc.jpg" alt=""></span></div>
         <div class="org">Australian National Institute of Management and Commerce (IMC) &middot; Hobart, TAS</div>
-        <p class="desc">Data Analytics for Business, Data Storytelling and Visualisation, Coding for Data Analytics, Corporate Finance, Accounting for Business, Marketing Management.</p>
+        <p class="desc">Learning to collect, analyse and visualise business data and turn the results into recommendations, alongside core business subjects in finance, accounting and marketing. Coursework covers data analytics, coding for data analysis and data storytelling, applied in group projects on real datasets.</p>
       </div>
       <div class="tl-item glass-card reveal">
         <div class="tl-top"><h3>Bachelor of Information Technology</h3><span class="date">Feb 2023 &ndash; Nov 2025</span></div>
+        <div class="org-logos" aria-hidden="true"><span class="org-logo"><img src="images/logos/cihe.png" alt=""></span></div>
         <div class="org">Crown Institute of Higher Education</div>
+        <p class="desc">My capstone was a smart attendance system using face recognition, built in a team. I also studied algorithms, Java, networking, and advanced cyber security, built mobile and web applications, and completed a database management project, which led most directly into my data work.</p>
       </div>
     </div>
   </div>
@@ -1756,6 +1780,16 @@ motionQuery.addEventListener('change', e => {
   reduceMotion = e.matches;
   reduceMotion ? stopOrbit() : startOrbit();
   placeOrbitItems();
+});
+
+/* ---------- Organisation logos (Education + Experience) ---------- */
+document.querySelectorAll('.org-logo img').forEach(img => {
+  const slot = img.closest('.org-logo');
+  const card = img.closest('.tl-item');
+  const ready = () => { slot.classList.add('is-loaded'); card.classList.add('has-logo'); };
+  const fail = () => slot.remove();          // missing file: no empty box, no broken icon
+  if (img.complete) { img.naturalWidth ? ready() : fail(); }
+  else { img.addEventListener('load', ready); img.addEventListener('error', fail); }
 });
 
 /* ---------- Project cover images ---------- */
