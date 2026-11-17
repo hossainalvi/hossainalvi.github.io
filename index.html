@@ -686,15 +686,6 @@ h1, h2, h3 { font-family: "Space Grotesk", sans-serif; line-height: 1.2; }
    ===================================================================== */
 section { padding: 72px 0; }
 
-/* STEP 8 - About */
-.about-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; align-items: start; }
-.about-grid p { color: var(--muted); margin-bottom: 16px; }
-.about-grid p strong { color: var(--text); }
-.facts { display: grid; gap: 14px; }
-.fact { --hs: 1.035; display: flex; justify-content: space-between; gap: 12px; padding: 15px 20px; border-radius: 14px; font-size: 0.93rem; }
-.fact span:first-child { color: var(--muted); }
-.fact span:last-child { font-weight: 600; text-align: right; }
-
 /* STEP 9 - Skills & Tools */
 .skills-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 .skill-card { --hs: 1.025; display: flex; flex-direction: column; padding: 24px; }
@@ -1009,8 +1000,7 @@ section { padding: 72px 0; }
 }
 @media (max-width: 860px) {
   .hero { padding-top: 96px; }
-  .hero-grid,
-  .about-grid { grid-template-columns: 1fr; }
+  .hero-grid { grid-template-columns: 1fr; }
   .hero-visual { order: -1; }
   .orbit-system { width: min(86vw, 360px); }
 }
@@ -1111,7 +1101,6 @@ section { padding: 72px 0; }
       <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
     </button>
     <ul class="nav-links" id="nav-links">
-      <li><a href="#about">About</a></li>
       <li><a href="#skills">Skills</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#education">Education</a></li>
@@ -1130,7 +1119,7 @@ section { padding: 72px 0; }
       <span class="tag">Hello, I'm</span>
       <h1>Hossain <span>Alvi</span></h1>
       <div class="role">Data Analyst &middot; Business Analytics MBA Student</div>
-      <p>I'm studying an MBA in Business Analytics at IMC, with a Bachelor of IT behind me. I work with Excel, SQL, Python, Tableau, Power BI and KNIME to clean data, find patterns and present results that people can act on.</p>
+      <p>I turn raw data into clear insights that help people make better decisions. I'm studying an MBA in Business Analytics at IMC, building on a Bachelor of IT from CIHE, and doing the Full Stack Data Professional internship at TDAI. My work is cleaning data, finding patterns and presenting results people can act on.</p>
       <div class="hero-buttons">
         <a href="#projects" class="glass-btn glass-btn--primary">View Projects</a>
         <a href="#contact" class="glass-btn">Get In Touch</a>
@@ -1152,7 +1141,7 @@ section { padding: 72px 0; }
       </div>
       <div class="hero-badge glass-card no-shine">
         <span class="dot" aria-hidden="true"></span>
-        <span>Open to Data Analyst Role<strong>Hobart, Tasmania</strong></span>
+        <span>Open to Data Analyst Role<strong>Tasmania</strong></span>
       </div>
     </div>
   </div>
@@ -1162,31 +1151,6 @@ section { padding: 72px 0; }
      data-icons: database, table, filter, clean, gear, chart, dashboard, bulb
      data-dots: number of moving dots   data-speed: seconds for one trip -->
 <div class="pipeline" data-icons="database,table,filter,chart" data-dots="2" data-speed="5" aria-hidden="true"></div>
-
-<!-- ================= ABOUT (Step 8) ================= -->
-<section id="about">
-  <div class="container">
-    <div class="section-head reveal">
-      <div class="num">About</div>
-      <h2>About Me</h2>
-    </div>
-    <div class="about-grid">
-      <div class="reveal">
-        <p>I'm <strong>Hossain Alvi</strong>, an MBA student in <strong>Business Analytics</strong> at the Australian National Institute of Management and Commerce (IMC) in Tasmania. Before that I completed a <strong>Bachelor of IT</strong>.</p>
-        <p>From 2019 to 2022 I worked as a freelance web designer and developer on Upwork and Fiverr, which is where I learned to work with clients, meet deadlines and explain technical work in plain terms.</p>
-        <p>In my MBA I've built clustering models in KNIME, valued a listed company in Excel, and built Tableau dashboards for group projects. I'm looking for a role where I can turn business data into clear decisions.</p>
-      </div>
-      <div class="facts reveal">
-        <div class="fact glass-card"><span>Location</span><span>Hobart, Tasmania</span></div>
-        <div class="fact glass-card"><span>Studying</span><span>MBA, Business Analytics</span></div>
-        <div class="fact glass-card"><span>Focus</span><span>Data analysis &amp; BI</span></div>
-        <div class="fact glass-card"><span>Available</span><span>Internships &amp; graduate roles</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="pipeline" data-icons="table,clean,gear,dashboard" data-dots="3" data-speed="6" aria-hidden="true"></div>
 
 <!-- ================= SKILLS (Step 9) ================= -->
 <section id="skills">
