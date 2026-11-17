@@ -805,9 +805,9 @@ section { padding: 72px 0; }
 .tl-item p.desc { color: var(--muted); font-size: 0.93rem; }
 /* Organisation logo slot: identical size in every card. Shown only once its image file loads. */
 .tl-item { --logo: 56px; --logo-gap: 18px; }
-.org-logos { position: absolute; left: 26px; top: 24px; display: none; flex-direction: column; gap: 8px; z-index: 1; }
+.org-logos { position: absolute; left: 26px; top: 24px; display: none; flex-direction: column; align-items: flex-start; gap: 8px; z-index: 1; }
 .tl-item.has-logo .org-logos { display: flex; }
-.tl-item.has-logo { padding-left: calc(26px + var(--logo) + var(--logo-gap)); }
+.tl-item.has-logo { padding-left: calc(26px + var(--logo-col, var(--logo)) + var(--logo-gap)); }
 .org-logo {
   display: none;
   width: var(--logo);
@@ -820,6 +820,8 @@ section { padding: 72px 0; }
   overflow: hidden;
 }
 .org-logo.is-loaded { display: block; }
+.org-logo--wide { width: auto; }                     /* wide logos: same height, natural width, never squeezed */
+.org-logo--wide img { width: auto; height: 100%; }
 .org-logo img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; border-radius: inherit; }  /* square logos fill the rounded slot */
 .tl-item ul { list-style: none; color: var(--muted); font-size: 0.93rem; }
 .tl-item li { position: relative; padding-left: 18px; margin-bottom: 6px; }
@@ -1050,8 +1052,9 @@ section { padding: 72px 0; }
   .tl-item { display: flex; flex-direction: column; padding: 20px; }
   .tl-item::after { left: -26px; top: 23px; }
   .tl-item { --logo: 48px; --logo-gap: 14px; }
-  .org-logos { left: 20px; top: 20px; }
-  .tl-item.has-logo { padding-left: calc(20px + var(--logo) + var(--logo-gap)); }
+  /* phones: logos sit in a row above the title so the text keeps its full width */
+  .org-logos { position: static; order: 0; flex-direction: row; flex-wrap: wrap; margin-bottom: 14px; }
+  .tl-item.has-logo { padding-left: 20px; }
   .tl-top { display: contents; }
   .tl-top h3 { order: 1; margin-bottom: 4px; }
   .tl-item .org { order: 2; margin-bottom: 4px; }
@@ -1300,11 +1303,24 @@ section { padding: 72px 0; }
     </div>
     <div class="timeline">
       <div class="tl-item glass-card reveal">
+        <div class="tl-top"><h3>Full Stack Data Professional Intern</h3><span class="date">October 2026 &ndash; Present</span></div>
+        <div class="org-logos" aria-hidden="true"><span class="org-logo"><img src="images/logos/tdai.png" alt=""></span></div>
+        <div class="org">TDAI</div>
+        <ul>
+          <li>Clean and analyse data in Excel, applying statistics to summarise and compare results.</li>
+          <li>Build practice dashboards and reports in Power BI and Tableau.</li>
+          <li>Query and prepare data using SQL (MySQL) and Microsoft Fabric.</li>
+          <li>Write Python to process and analyse data, and explore Microsoft generative AI for analysis tasks.</li>
+        </ul>
+      </div>
+      <div class="tl-item glass-card reveal">
         <div class="tl-top"><h3>Freelance Web Designer &amp; Developer</h3><span class="date">2019 &ndash; 2022</span></div>
+        <div class="org-logos" aria-hidden="true"><span class="org-logo org-logo--wide"><img src="images/logos/upwork.png" alt=""></span><span class="org-logo org-logo--wide"><img src="images/logos/fiveer.jpg" alt=""></span></div>
         <div class="org">Upwork &amp; Fiverr &middot; Remote</div>
         <ul>
-          <li>Designed and built websites for clients from brief to launch.</li>
-          <li>Handled on-page SEO to help client sites rank in search.</li>
+          <li>Designed and built client websites from brief to launch using HTML, CSS and JavaScript.</li>
+          <li>Built and customised WordPress sites, using PHP to adapt them to each client's needs.</li>
+          <li>Worked from client briefs to understand what each business needed before building.</li>
           <li>Managed client communication, revisions and deadlines on my own.</li>
         </ul>
       </div>
@@ -1783,10 +1799,15 @@ motionQuery.addEventListener('change', e => {
 });
 
 /* ---------- Organisation logos (Education + Experience) ---------- */
+function sizeLogoCol(card) {
+  const col = card.querySelector('.org-logos');
+  if (col) card.style.setProperty('--logo-col', col.offsetWidth + 'px');
+}
+window.addEventListener('resize', () => document.querySelectorAll('.tl-item.has-logo').forEach(sizeLogoCol));
 document.querySelectorAll('.org-logo img').forEach(img => {
   const slot = img.closest('.org-logo');
   const card = img.closest('.tl-item');
-  const ready = () => { slot.classList.add('is-loaded'); card.classList.add('has-logo'); };
+  const ready = () => { slot.classList.add('is-loaded'); card.classList.add('has-logo'); sizeLogoCol(card); };
   const fail = () => slot.remove();          // missing file: no empty box, no broken icon
   if (img.complete) { img.naturalWidth ? ready() : fail(); }
   else { img.addEventListener('load', ready); img.addEventListener('error', fail); }
